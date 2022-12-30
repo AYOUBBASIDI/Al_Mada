@@ -3,10 +3,13 @@ const express_graphql = require('express-graphql').graphqlHTTP;
 const connectToDb = require("./config/db")
 const schema = require('./schema/schema');
 const root = require('./resolvers/resolvers');
+const cors = require('cors');
+const corsOptions = require('./config/corsOptions');
 
+const app = express();
+app.use(cors(corsOptions));
 connectToDb()
   .then(() => {
-    const app = express();
     app.use('/graphql', express_graphql({
       schema: schema,
       rootValue: root,

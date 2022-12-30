@@ -1,7 +1,14 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { useQuery } from '@apollo/client';
+import { getData } from "./gql/Query";
 
-function App() {
+function ProductTable() {
+  const { loading, error, data } = useQuery(getData);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
+
+
   return (
     <div className="flex flex-col">
             <div className="overflow-x-auto">
@@ -63,7 +70,7 @@ function App() {
                 <div className="p-1.5 w-full inline-block align-middle">
                     <div className="overflow-hidden border rounded-lg">
                         <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gray-50">
+      <thead className="bg-gray-50">
                                 <tr>
                                     <th scope="col" className="py-3 pl-4">
                                         <div className="flex items-center h-5">
@@ -84,36 +91,49 @@ function App() {
                                         scope="col"
                                         className="px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
                                     >
-                                        ID
-                                    </th>
-                                    <th
-                                        scope="col"
-                                        className="px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
-                                    >
                                         Name
                                     </th>
                                     <th
                                         scope="col"
                                         className="px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
                                     >
-                                        Email
+                                        IPR
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        className="px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
+                                    >
+                                        Designation
                                     </th>
                                     <th
                                         scope="col"
                                         className="px-6 py-3 text-xs font-bold text-right text-gray-500 uppercase "
                                     >
-                                        Edit
+                                        Status
                                     </th>
                                     <th
                                         scope="col"
                                         className="px-6 py-3 text-xs font-bold text-right text-gray-500 uppercase "
                                     >
-                                        Delete
+                                        Number
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        className="px-6 py-3 text-xs font-bold text-right text-gray-500 uppercase "
+                                    >
+                                      Office
+                                    </th>
+                                    <th
+                                        scope="col"
+                                        className="px-6 py-3 text-xs font-bold text-right text-gray-500 uppercase "
+                                    >
+                                        Owner
                                     </th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-200">
-                                <tr>
+                            {data.documents.slice(0, 10).map(document => (
+                                <tr key={document._id}>
                                     <td className="py-3 pl-4">
                                         <div className="flex items-center h-5">
                                             <input
@@ -129,74 +149,30 @@ function App() {
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 text-sm font-medium text-gray-800 whitespace-nowrap">
-                                        1
-                                    </td>
-                                    <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
-                                        Jone Doe
-                                    </td>
-                                    <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
-                                        jonne62@gmail.com
-                                    </td>
-                                    <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                                        <a
-                                            className="text-green-500 hover:text-green-700"
-                                            href="#"
-                                        >
-                                            Edit
-                                        </a>
-                                    </td>
-                                    <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                                        <a
-                                            className="text-red-500 hover:text-red-700"
-                                            href="#"
-                                        >
-                                            Delete
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className="py-3 pl-4">
-                                        <div className="flex items-center h-5">
-                                            <input
-                                                type="checkbox"
-                                                className="text-blue-600 border-gray-200 rounded focus:ring-blue-500"
-                                            />
-                                            <label
-                                                htmlFor="checkbox"
-                                                className="sr-only"
-                                            >
-                                                Checkbox
-                                            </label>
-                                        </div>
+                                    {document.Name}
                                     </td>
                                     <td className="px-6 py-4 text-sm font-medium text-gray-800 whitespace-nowrap">
-                                        1
+                                    {document.IPR}
                                     </td>
                                     <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
-                                        Jone Doe
+                                    {document.Designation}
                                     </td>
                                     <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
-                                        jonne62@gmail.com
+                                    {document.Status}
                                     </td>
                                     <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                                        <a
-                                            className="text-green-500 hover:text-green-700"
-                                            href="#"
-                                        >
-                                            Edit
-                                        </a>
+                                    {document.Number}
                                     </td>
                                     <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                                        <a
-                                            className="text-red-500 hover:text-red-700"
-                                            href="#"
-                                        >
-                                            Delete
-                                        </a>
+                                    {document.Office}
+                                    </td>
+                                    <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
+                                    {document.Owner}
                                     </td>
                                 </tr>
+                                ))}
                             </tbody>
-                        </table>
+      </table>
                     </div>
                 </div>
             </div>
@@ -204,4 +180,12 @@ function App() {
   );
 }
 
-export default App;
+function App() {
+    return (
+        <div className="App">
+          <ProductTable />
+        </div>
+    );
+  }
+  
+  export default App;
