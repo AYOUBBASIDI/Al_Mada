@@ -17,14 +17,17 @@ const schema = buildSchema(`
         deleteData: String
     }
     type Document {
+        _id : String!
+        Name : String!
         IPR : String!
         Designation : String!
         Status : String!
+        Status_date : String!
         Number : String!
         Office : String!
+        Nice_classification : String!
         Owner : String!
     }
-
 `);
 
 // coursesData example
@@ -120,28 +123,39 @@ const deleteData = function () {
     return "Data deleted";
 }
 
-const getData = function () {
-    MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-        if (err) {
-            console.log(err);
-            return {"IPR":"test","Designation":"test","Status":"test","Number":"test","Office":"test","Owner":"test"};
-        }else{
-            const db = client.db("Mada");
-            db.collection("test").find({}).toArray(function(err, result) {
-            client.close();
-            
-            });
-        }
-        return {"IPR":"test","Designation":"test","Status":"test","Number":"test","Office":"test","Owner":"test"};
-    });
-}
+// const getData = function () {
+//     const documents = MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
+//         if (err) {
+//             console.log(err);
+//             return;
+//         }else{
+//             const db = client.db("Mada");
+//             db.collection("test").find({}).toArray(function(err, result) {
+//             client.close();
+//             return result;
+//             });
+//         }
+//     });
+//     return documents;
+// }
+
+const getData = async function () {
+    try {
+      const client = await MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+      const db = client.db("Mada");
+      const result = await db.collection("test").find({}).toArray();
+      client.close();
+      return result;
+    } catch (err) {
+      console.log(err);
+      return [];
+    }
+  };
 
 
 
 // Root resolver
 const root = {
-    course: getCourse,
-    courses: getCourses,
     importData:importData,
     deleteData : deleteData,
     documents: getData
