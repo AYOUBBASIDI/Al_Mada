@@ -33,14 +33,14 @@ services:
   frontend:
     # to build an image based on Dockerfile
     # it looks in this folder to find Dockerfile to build an image
-    build: ./mada-client
+    build: ./mada
 
     # the port that we want to publish for frontend
     ports:
       - "3000:3000"
     # add bind mount volume to keep have updated source code
     volumes:
-      - ./mada-client/src:/app/src
+      - ./mada/src:/app/src
     # allow interactive mode
     stdin_open: true
     tty: true
